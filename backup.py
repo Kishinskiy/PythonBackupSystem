@@ -106,7 +106,7 @@ def docopy(source_folder, target_folder):
             # shutil.copy2(os.path.join(subdir, file), target_folder)
             try:
                shutil.move(os.path.join(subdir, file), target_folder)
-            except FileExistsError as e:
+            except IOError as e:
                 print(e)
 
 
