@@ -4,15 +4,47 @@
 # Written in Python 2.7
 ###
 import argparse
+import datetime
+import logging
 import os
 import sys
 import zipfile
 import shutil
 
-
 # # MAX = 500*1024*1024    # 500Mb    - max chapter size
-MAX = 500*1024*1024
-BUF = 50*1024*1024*1024    # 50GB     - memory buffer size
+MAX = 500 * 1024 * 1024
+BUF = 50 * 1024 * 1024 * 1024  # 50GB     - memory buffer size
+
+# '''Loging options'''
+current_data = str(datetime.date.today())
+logging.basicConfig(
+    format='%(asctime)s, %(levelname)s %(message)s',
+    datefmt='%H:%M:%S',
+    filename=current_data + '_backup.log',
+    filemode='w',
+    level=logging.DEBUG
+)
+
+
+#
+
+
+# file_handler = logging.FileHandler(filename='tmp.log')
+# stdout_handler = logging.StreamHandler(sys.stdout)
+# handlers = [file_handler, stdout_handler]
+#
+# logging.basicConfig(
+#     level=logging.DEBUG,
+#     format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
+#     datefmt='%H:%M:%S',
+#     filename=current_data + '_backup.log',
+#     filemode='w',
+#     handlers=handlers
+# )
+#
+# logger = logging.getLogger('LOGGER_NAME')
+# log = logging.getLogger("ex")
+# '''End Logging options'''
 
 
 # get arguments
@@ -32,12 +64,9 @@ def parse_input():
 
 
 def file_split(FILE, MAX):
-    '''Split file into pieces, every size is  MAX = 15*1024*1024 Byte'''
+    """Split file into pieces, every size is  MAX = 15*1024*1024 Byte"""
     chapters = 1
     uglybuf = ''
-
-
-
     with open(FILE, 'rb') as src:
         while True:
             tgt = open(FILE + '.%03d' % chapters, 'wb')
@@ -63,6 +92,7 @@ def doprocess(source_folder, target_zip):
     for subdir, dirs, files in os.walk(source_folder):
         for file in files:
             print(os.path.join(subdir, file))
+            logging.debug(os.path.join(subdir, file))
             zipf.write(os.path.join(subdir, file))
 
     print("Created ", target_zip)
@@ -74,11 +104,24 @@ def docopy(source_folder, target_folder):
         for file in files:
             print(os.path.join(subdir, file))
             # shutil.copy2(os.path.join(subdir, file), target_folder)
-            shutil.move(os.path.join(subdir, file), target_folder)
+            try:
+               shutil.move(os.path.join(subdir, file), target_folder)
+            except Exception as e:
+                print(e)
+
 
 
 if __name__ == '__main__':
-    print('Starting execution')
+    # logpath = 'logs'
+    # if not os.path.exists(logpath):
+    #     os.makedirs(logpath)
+
+    try:
+        logging.info('Started')
+    except Exception as e:
+        print(e)
+    finally:
+        print('Starting execution')
 
     arg = parse_input()
     dest = arg.dst[0]
@@ -108,7 +151,6 @@ if __name__ == '__main__':
 
     if not os.path.exists(dest):
         os.makedirs(dest)
-
 
     # copy to backup folder
     docopy(path, dest)
