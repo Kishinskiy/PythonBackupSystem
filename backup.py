@@ -21,7 +21,7 @@ logging.basicConfig(
     format='%(asctime)s, %(levelname)s %(message)s',
     datefmt='%H:%M:%S',
     filename=current_data + '_backup.log',
-    filemode='w',
+    filemode='a',
     level=logging.DEBUG
 )
 
@@ -91,11 +91,20 @@ def doprocess(source_folder, target_zip):
     zipf = zipfile.ZipFile(target_zip, "w")
     for subdir, dirs, files in os.walk(source_folder):
         for file in files:
-            print(os.path.join(subdir, file))
-            logging.debug(os.path.join(subdir, file))
-            zipf.write(os.path.join(subdir, file))
+            try:
+                print(os.path.join(subdir, file))
+                logging.debug(os.path.join(subdir, file))
+                zipf.write(os.path.join(subdir, file))
+            except Exception as e:
+                print(e)
+                logging.error(e, exc_info=False)
 
-    print("Created ", target_zip)
+    try:
+        logging.info("Archive created")
+        print("Created ", target_zip)
+    except Exception as e:
+        print(e)
+        logging.error(e, exc_info=False)
 
 
 # copy files to a target folder
@@ -105,9 +114,11 @@ def docopy(source_folder, target_folder):
             print(os.path.join(subdir, file))
             # shutil.copy2(os.path.join(subdir, file), target_folder)
             try:
-               shutil.move(os.path.join(subdir, file), target_folder)
+               # shutil.move(os.path.join(subdir, file), target_folder)
+               shutil.copy2(os.path.join(subdir, file), target_folder)
             except IOError as e:
                 print(e)
+                logging.error(e, exc_info=False)
 
 
 
@@ -115,9 +126,10 @@ if __name__ == '__main__':
     # logpath = 'logs'
     # if not os.path.exists(logpath):
     #     os.makedirs(logpath)
+    # current_data = str(datetime.date.today())
 
     try:
-        logging.info('Started')
+        logging.info('Backup is Started')
     except Exception as e:
         print(e)
     finally:
@@ -136,6 +148,7 @@ if __name__ == '__main__':
     path = 'Backup'
     if not os.path.exists(path):
         os.makedirs(path)
+    retval = os.getcwd()
 
     os.chdir(path)
 
@@ -147,7 +160,7 @@ if __name__ == '__main__':
 
     os.remove(name)
 
-    os.chdir("..")
+    os.chdir(retval)
 
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -155,4 +168,9 @@ if __name__ == '__main__':
     # copy to backup folder
     docopy(path, dest)
 
-    print('Ending execution')
+    try:
+        logging.info("Backup Finished")
+    except Exception as e:
+        print(e)
+    finally:
+        print('Ending execution')
