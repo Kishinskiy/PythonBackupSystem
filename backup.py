@@ -101,11 +101,6 @@ def docopy(source_folder, target_folder):
 
 
 if __name__ == '__main__':
-    # logpath = 'logs'
-    # if not os.path.exists(logpath):
-    #     os.makedirs(logpath)
-    # current_data = str(datetime.date.today())
-
     try:
         logging.info('Backup is Started')
     except Exception as e:
@@ -119,12 +114,9 @@ if __name__ == '__main__':
     sources = source.split(" ") #делим список на отдельные элементы разделяя их через пробел (Соотвтественно папки для копирования должны быть указанны через пробел
     name = arg.name[0]
     try:
-        exclude = arg.exclude[0]
-        excludes = exclude.split(" ")
+        excludes = arg.exclude[0].split(" ")
     except Exception as e:
         print(e)
-
-    print(excludes)
 
     path = 'Backup'
     if not os.path.exists(path):
