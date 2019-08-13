@@ -20,35 +20,13 @@ logging.basicConfig(
     level=logging.DEBUG
 )
 
-
-#
-
-
-# file_handler = logging.FileHandler(filename='tmp.log')
-# stdout_handler = logging.StreamHandler(sys.stdout)
-# handlers = [file_handler, stdout_handler]
-#
-# logging.basicConfig(
-#     level=logging.DEBUG,
-#     format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
-#     datefmt='%H:%M:%S',
-#     filename=current_data + '_backup.log',
-#     filemode='w',
-#     handlers=handlers
-# )
-#
-# logger = logging.getLogger('LOGGER_NAME')
-# log = logging.getLogger("ex")
-# '''End Logging options'''
-
-
 # get arguments
 def parse_input():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', nargs='*', type=str, required=True, help='Path to Source folder')
     parser.add_argument('--dest', nargs='*', type=str, required=True, help='Path to Destination folder')
     parser.add_argument('--name', nargs='*', type=str, required=True, help='Archive name .zip')
-    parser.add_argument('--exclude', nargs='*', type=str, required=False, help='Exclude files .txt .ini .doc .etc')
+    parser.add_argument('--exclude', nargs='*', type=str, required=False, help='Exclude files txt ini doc etc')
     # parser.add_argument('-s', nargs='?', const=1, type=int, default=500)
     # parser.add_argument('-b', nargs='?', const=1, type=int, default=50)
     # no input means show me the help
