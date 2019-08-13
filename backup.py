@@ -133,22 +133,18 @@ if __name__ == '__main__':
     arg = parse_input()
     dest = arg.dst[0]
     source = arg.src[0]
+    sources = source.split(" ")
     name = arg.name[0]
-    # size = arg.s[0]
-    # buf = arg.b[0]
-    #
-    # MAX = size * 1024 * 1024
-    # BUF = buf * 1024 * 1024 * 1024
 
     path = 'Backup'
     if not os.path.exists(path):
         os.makedirs(path)
     retval = os.getcwd()
-
     os.chdir(path)
 
-    # compress to zip
-    doprocess(source, name)
+    for i in range(len(sources)):
+        # compress to zip
+        doprocess(sources[i], name)
 
     # split zip archive
     file_split(name, MAX)
