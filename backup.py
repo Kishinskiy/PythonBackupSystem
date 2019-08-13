@@ -84,17 +84,18 @@ def file_split(FILE, MAX):
 
 
 # copy files and folder and compress into a zip file
-def doprocess(source_folder, target_zip):
+def doprocess(source_folder, target_zip, excludes):
     zipf = zipfile.ZipFile(target_zip, "a")
     for subdir, dirs, files in os.walk(source_folder):
         for file in files:
-            try:
-                print(os.path.join(subdir, file))
-                logging.debug(os.path.join(subdir, file))
-                zipf.write(os.path.join(subdir, file))
-            except Exception as e:
-                print(e)
-                logging.error(e, exc_info=False)
+            if file.split('.')[-1] not in excludes:
+                try:
+                    print(os.path.join(subdir, file))
+                    logging.debug(os.path.join(subdir, file))
+                    zipf.write(os.path.join(subdir, file))
+                except Exception as e:
+                    print(e)
+                    logging.error(e, exc_info=False)
 
     try:
         logging.info("Archive created")
@@ -145,6 +146,8 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
 
+    print(excludes)
+
     path = 'Backup'
     if not os.path.exists(path):
         os.makedirs(path)
@@ -153,7 +156,7 @@ if __name__ == '__main__':
 
     for i in range(len(sources)):
         # compress to zip
-        doprocess(sources[i], name) # Собираем все файлы в указанных каталогах в 1 архив
+        doprocess(sources[i], name, excludes) # Собираем все файлы в указанных каталогах в 1 архив
 
     file_split(name, MAX)  # Делим архив на части
     os.chdir(retval)
