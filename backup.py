@@ -78,12 +78,13 @@ def file_split(FILE, MAX):
             if len(uglybuf) == 0:
                 break
             chapters += 1
+    os.remove(FILE)
     print("Split archive to chapter complete")
 
 
 # copy files and folder and compress into a zip file
 def doprocess(source_folder, target_zip):
-    zipf = zipfile.ZipFile(target_zip, "w")
+    zipf = zipfile.ZipFile(target_zip, "a")
     for subdir, dirs, files in os.walk(source_folder):
         for file in files:
             try:
@@ -104,6 +105,8 @@ def doprocess(source_folder, target_zip):
 
 # copy files to a target folder
 def docopy(source_folder, target_folder):
+    if not os.path.exists(target_folder):
+        os.mkdir(target_folder)
     for subdir, dirs, files in os.walk(source_folder):
         for file in files:
             print(os.path.join(subdir, file))
@@ -146,22 +149,21 @@ if __name__ == '__main__':
         # compress to zip
         doprocess(sources[i], name)
 
-    # split zip archive
     file_split(name, MAX)
-
-    os.remove(name)
-
     os.chdir(retval)
-
-    if not os.path.exists(dest):
-        os.makedirs(dest)
-
-    # copy to backup folder
     docopy(path, dest)
-
     try:
         logging.info("Backup Finished")
     except Exception as e:
         print(e)
     finally:
         print('Ending execution')
+
+
+
+
+
+
+
+
+
