@@ -135,12 +135,15 @@ if __name__ == '__main__':
         print('Starting execution')
 
     arg = parse_input()
-    dest = arg.dst[0]
-    source = arg.src[0] # Получаем список src одним элементом
+    dest = arg.dest[0]
+    source = arg.source[0] # Получаем список src одним элементом
     sources = source.split(" ") #делим список на отдельные элементы разделяя их через пробел (Соотвтественно папки для копирования должны быть указанны через пробел
     name = arg.name[0]
-    exclude = arg.exclude[0]
-    excludes = exclude.split(" ")
+    try:
+        exclude = arg.exclude[0]
+        excludes = exclude.split(" ")
+    except Exception as e:
+        print(e)
 
     path = 'Backup'
     if not os.path.exists(path):
