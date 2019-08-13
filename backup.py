@@ -45,9 +45,10 @@ logging.basicConfig(
 # get arguments
 def parse_input():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-src', nargs='*', type=str, required=True, help='Path to Source folder')
-    parser.add_argument('-dst', nargs='*', type=str, required=True, help='Path to Destination folder')
-    parser.add_argument('-name', nargs='*', type=str, required=True, help='Archive name .zip')
+    parser.add_argument('--source', nargs='*', type=str, required=True, help='Path to Source folder')
+    parser.add_argument('--dest', nargs='*', type=str, required=True, help='Path to Destination folder')
+    parser.add_argument('--name', nargs='*', type=str, required=True, help='Archive name .zip')
+    parser.add_argument('--exclude', nargs='*', type=str, required=False, help='Exclude files .txt .ini .doc .etc')
     # parser.add_argument('-s', nargs='?', const=1, type=int, default=500)
     # parser.add_argument('-b', nargs='?', const=1, type=int, default=50)
     # no input means show me the help
@@ -138,6 +139,8 @@ if __name__ == '__main__':
     source = arg.src[0] # Получаем список src одним элементом
     sources = source.split(" ") #делим список на отдельные элементы разделяя их через пробел (Соотвтественно папки для копирования должны быть указанны через пробел
     name = arg.name[0]
+    exclude = arg.exclude[0]
+    excludes = exclude.split(" ")
 
     path = 'Backup'
     if not os.path.exists(path):
